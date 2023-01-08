@@ -1,6 +1,15 @@
 import React from 'react';
 import { PokemonProvider, usePokemon } from './store';
 
+const SearchBox = () => {
+  return (
+    <input
+      className='mt-3 block w-full rounded-md border border-gray-300 outline-0 shadow-sm focus:border-indigo-800 focus:ring-indigo-800 sm:text-lg p-2'
+      placeholder='Search'
+    />
+  );
+};
+
 const PokemonList = () => {
   const { pokemon } = usePokemon();
   return (
@@ -29,6 +38,7 @@ function App() {
     <div>
       <PokemonProvider>
         <div className='mx-auto max-w-3xl'>
+          <SearchBox />
           <PokemonList />
         </div>
       </PokemonProvider>
