@@ -74,7 +74,12 @@ function usePokemonSource(): {
     [pokemon, search]
   );
 
-  return { pokemon: filteredPokemon, search, setSearch };
+  const sortedPokemon = useMemo(
+    () => [...filteredPokemon].sort((a, b) => a.name.localeCompare(b.name)),
+    [filteredPokemon]
+  );
+
+  return { pokemon: sortedPokemon, search, setSearch };
 }
 
 const PokemonContext = createContext<ReturnType<typeof usePokemonSource>>(
