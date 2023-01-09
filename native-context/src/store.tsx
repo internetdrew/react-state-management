@@ -1,5 +1,11 @@
 import React from 'react';
-import { useState, useEffect, useContext, createContext } from 'react';
+import {
+  useState,
+  useEffect,
+  useContext,
+  createContext,
+  useReducer,
+} from 'react';
 
 interface Pokemon {
   id: number;
@@ -13,16 +19,37 @@ interface Pokemon {
   speed: number;
 }
 
-function usePokemonSource(): { pokemon: Pokemon[] } {
-  const [pokemon, setPokemon] = useState<Pokemon[]>([]);
+function usePokemonSource(): { pokemon: Pokemon[]; search: string } {
+  type PokemonState = {
+    pokemon: Pokemon[];
+    search: string;
+  };
+
+  type PokemonAction = {
+    type: 'setPokemon';
+    payload: Pokemon[];
+  };
+
+  const [{ pokemon, search }, dispatch] = useReducer(
+    (state: PokemonState, action: PokemonAction) => {
+      switch (action.type) {
+        case 'setPokemon':
+          return { ...state, pokemon: action.payload };
+      }
+    },
+    {
+      pokemon: [],
+      search: '',
+    }
+  );
 
   useEffect(() => {
     fetch('./pokemon.json')
       .then(res => res.json())
-      .then(data => setPokemon(data));
+      .then(data => dispatch({ type: 'setPokemon', payload: data }));
   }, []);
 
-  return { pokemon };
+  return { pokemon, search };
 }
 
 const PokemonContext = createContext<ReturnType<typeof usePokemonSource>>(
